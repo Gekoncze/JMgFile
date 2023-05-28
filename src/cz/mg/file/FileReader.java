@@ -2,17 +2,20 @@ package cz.mg.file;
 
 import cz.mg.annotations.classes.Service;
 import cz.mg.annotations.requirement.Mandatory;
-import cz.mg.annotations.requirement.Optional;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 
 public @Service class FileReader {
-    private static @Optional FileReader instance;
+    private static volatile @Service FileReader instance;
 
-    public static @Mandatory FileReader getInstance() {
+    public static @Service FileReader getInstance() {
         if (instance == null) {
-            instance = new FileReader();
+            synchronized (Service.class) {
+                if (instance == null) {
+                    instance = new FileReader();
+                }
+            }
         }
         return instance;
     }
