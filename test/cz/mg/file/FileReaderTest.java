@@ -1,5 +1,6 @@
 package cz.mg.file;
 
+import cz.mg.annotations.classes.Service;
 import cz.mg.annotations.classes.Test;
 import cz.mg.annotations.requirement.Mandatory;
 import cz.mg.test.Assert;
@@ -18,6 +19,8 @@ public @Test class FileReaderTest {
 
         System.out.println("OK");
     }
+
+    private final @Service FileReader reader = FileReader.getInstance();
 
     private void testRead() {
         String expectedContent = "first line;\nsecond line,\nthird line.\nfourth line\\\nfifth line'";
@@ -65,7 +68,6 @@ public @Test class FileReaderTest {
     }
 
     private @Mandatory File readContent(@Mandatory Path path) {
-        FileReader reader = FileReader.getInstance();
         File file = new File(path, null);
         reader.read(file);
         return file;
