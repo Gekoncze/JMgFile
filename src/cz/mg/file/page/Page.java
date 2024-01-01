@@ -1,25 +1,26 @@
-package cz.mg.file;
+package cz.mg.file.page;
 
 import cz.mg.annotations.classes.Entity;
 import cz.mg.annotations.requirement.Required;
 import cz.mg.annotations.storage.Value;
+import cz.mg.collections.list.List;
 
 import java.nio.file.Path;
 
-public @Entity class File {
+public @Entity class Page {
     private Path path;
-    private String content;
+    private List<String> lines = new List<>();
 
-    public File() {
+    public Page() {
     }
 
-    public File(Path path) {
+    public Page(Path path) {
         this.path = path;
     }
 
-    public File(Path path, String content) {
+    public Page(Path path, List<String> lines) {
         this.path = path;
-        this.content = content;
+        this.lines = lines;
     }
 
     @Required @Value
@@ -32,11 +33,11 @@ public @Entity class File {
     }
 
     @Required @Value
-    public String getContent() {
-        return content;
+    public List<String> getLines() {
+        return lines;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setLines(List<String> lines) {
+        this.lines = lines;
     }
 }

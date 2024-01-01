@@ -11,16 +11,30 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public @Test class FileReaderTest {
+    private static volatile @Test FileReaderTest instance;
+
+    public static @Test FileReaderTest getInstance() {
+        if (instance == null) {
+            synchronized (Service.class) {
+                if (instance == null) {
+                    instance = new FileReaderTest();
+                    instance.reader = FileReader.getInstance();
+                }
+            }
+        }
+        return instance;
+    }
+
+    private @Service FileReader reader;
+
     public static void main(String[] args) {
         System.out.print("Running " + FileReaderTest.class.getSimpleName() + " ... ");
 
-        FileReaderTest test = new FileReaderTest();
+        FileReaderTest test = FileReaderTest.getInstance();
         test.testRead();
 
         System.out.println("OK");
     }
-
-    private final @Service FileReader reader = FileReader.getInstance();
 
     private void testRead() {
         String expectedContent = "first line;\nsecond line,\nthird line.\nfourth line\\\nfifth line'";

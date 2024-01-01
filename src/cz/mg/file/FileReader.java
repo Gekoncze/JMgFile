@@ -2,9 +2,9 @@ package cz.mg.file;
 
 import cz.mg.annotations.classes.Service;
 import cz.mg.annotations.requirement.Mandatory;
-
-import java.io.BufferedReader;
-import java.io.IOException;
+import cz.mg.collections.services.StringJoiner;
+import cz.mg.file.page.Page;
+import cz.mg.file.page.PageReader;
 
 public @Service class FileReader {
     private static volatile @Service FileReader instance;
@@ -14,11 +14,16 @@ public @Service class FileReader {
             synchronized (Service.class) {
                 if (instance == null) {
                     instance = new FileReader();
+                    instance.joiner = StringJoiner.getInstance();
+                    instance.reader = PageReader.getInstance();
                 }
             }
         }
         return instance;
     }
+
+    private @Service StringJoiner joiner;
+    private @Service PageReader reader;
 
     private FileReader() {
     }
@@ -28,19 +33,8 @@ public @Service class FileReader {
      * System dependent line endings are converted to '\n'.
      */
     public void read(@Mandatory File file) {
-        try (BufferedReader reader = new BufferedReader(new java.io.FileReader(file.getPath().toFile()))) {
-            StringBuilder builder = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
-                builder.append("\n");
-            }
-            if (builder.length() > 0) {
-                builder.deleteCharAt(builder.length() - 1);
-            }
-            file.setContent(builder.toString());
-        } catch (IOException e) {
-            throw new FileException("Could not read file '" + file.getPath().getFileName() + "'.", e);
-        }
+        Page page = new Page(file.getPath());
+        reader.read(page);
+        file.setContent(joiner.join(page.getLines(), "\n"));
     }
 }
