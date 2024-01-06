@@ -48,25 +48,25 @@ public @Test class FileReaderTest {
     private void testLinuxFile(@Mandatory String expectedContent, @Mandatory Path directory) {
         Path path = directory.resolve("linuxfile");
         writeContent(path, expectedContent);
-        verify(expectedContent, readContent(path).getContent());
+        verify(expectedContent, reader.read(path).getContent());
     }
 
     private void testWindowsFile(@Mandatory String expectedContent, @Mandatory Path directory) {
         Path path = directory.resolve("windowsfile");
         writeContent(path, expectedContent.replace("\n", "\r\n"));
-        verify(expectedContent, readContent(path).getContent());
+        verify(expectedContent, reader.read(path).getContent());
     }
 
     private void testMacosFile(@Mandatory String expectedContent, @Mandatory Path directory) {
         Path path = directory.resolve("macosfile");
         writeContent(path, expectedContent.replace("\n", "\r"));
-        verify(expectedContent, readContent(path).getContent());
+        verify(expectedContent, reader.read(path).getContent());
     }
 
     private void testEmptyFile(@Mandatory Path directory) {
         Path path = directory.resolve("emptyfile");
         writeContent(path, "");
-        verify("", readContent(path).getContent());
+        verify("", reader.read(path).getContent());
     }
 
     private void verify(@Mandatory String expectedContent, @Mandatory String actualContent) {
@@ -79,12 +79,6 @@ public @Test class FileReaderTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private @Mandatory File readContent(@Mandatory Path path) {
-        File file = new File(path, null);
-        reader.read(file);
-        return file;
     }
 
     private @Mandatory String toHexString(@Mandatory String s) {

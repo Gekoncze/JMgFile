@@ -7,6 +7,7 @@ import cz.mg.file.FileException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
 
 public @Service class PageReader {
     private static volatile @Service PageReader instance;
@@ -34,5 +35,11 @@ public @Service class PageReader {
         } catch (IOException e) {
             throw new FileException("Could not read file '" + page.getPath().getFileName() + "'.", e);
         }
+    }
+
+    public @Mandatory Page read(@Mandatory Path path) {
+        Page page = new Page(path);
+        read(page);
+        return page;
     }
 }

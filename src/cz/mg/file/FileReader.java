@@ -6,6 +6,8 @@ import cz.mg.collections.services.StringJoiner;
 import cz.mg.file.page.Page;
 import cz.mg.file.page.PageReader;
 
+import java.nio.file.Path;
+
 public @Service class FileReader {
     private static volatile @Service FileReader instance;
 
@@ -36,5 +38,11 @@ public @Service class FileReader {
         Page page = new Page(file.getPath());
         reader.read(page);
         file.setContent(joiner.join(page.getLines(), "\n"));
+    }
+
+    public @Mandatory File read(@Mandatory Path path) {
+        File file = new File(path);
+        read(file);
+        return file;
     }
 }
