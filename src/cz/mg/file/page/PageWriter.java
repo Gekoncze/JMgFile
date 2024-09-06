@@ -2,7 +2,7 @@ package cz.mg.file.page;
 
 import cz.mg.annotations.classes.Service;
 import cz.mg.annotations.requirement.Mandatory;
-import cz.mg.collections.services.StringJoiner;
+import cz.mg.collections.components.StringJoiner;
 import cz.mg.file.File;
 import cz.mg.file.FileWriter;
 
@@ -14,7 +14,6 @@ public @Service class PageWriter {
             synchronized (Service.class) {
                 if (instance == null) {
                     instance = new PageWriter();
-                    instance.joiner = StringJoiner.getInstance();
                     instance.writer = FileWriter.getInstance();
                 }
             }
@@ -22,7 +21,6 @@ public @Service class PageWriter {
         return instance;
     }
 
-    private @Service StringJoiner joiner;
     private @Service FileWriter writer;
 
     private PageWriter() {
@@ -31,7 +29,7 @@ public @Service class PageWriter {
     public void write(@Mandatory Page page) {
         writer.write(new File(
             page.getPath(),
-            joiner.join(page.getLines(), "\n")
+            new StringJoiner<>(page.getLines()).withDelimiter("\n").join()
         ));
     }
 }

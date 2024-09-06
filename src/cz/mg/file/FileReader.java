@@ -2,7 +2,7 @@ package cz.mg.file;
 
 import cz.mg.annotations.classes.Service;
 import cz.mg.annotations.requirement.Mandatory;
-import cz.mg.collections.services.StringJoiner;
+import cz.mg.collections.components.StringJoiner;
 import cz.mg.file.page.Page;
 import cz.mg.file.page.PageReader;
 
@@ -16,7 +16,6 @@ public @Service class FileReader {
             synchronized (Service.class) {
                 if (instance == null) {
                     instance = new FileReader();
-                    instance.joiner = StringJoiner.getInstance();
                     instance.reader = PageReader.getInstance();
                 }
             }
@@ -24,7 +23,6 @@ public @Service class FileReader {
         return instance;
     }
 
-    private @Service StringJoiner joiner;
     private @Service PageReader reader;
 
     private FileReader() {
@@ -37,7 +35,7 @@ public @Service class FileReader {
     public void read(@Mandatory File file) {
         Page page = new Page(file.getPath());
         reader.read(page);
-        file.setContent(joiner.join(page.getLines(), "\n"));
+        file.setContent(new StringJoiner<>(page.getLines()).withDelimiter("\n").join());
     }
 
     public @Mandatory File read(@Mandatory Path path) {
