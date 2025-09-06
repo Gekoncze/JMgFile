@@ -3,7 +3,7 @@ package cz.mg.file.page;
 import cz.mg.annotations.classes.Service;
 import cz.mg.annotations.classes.Test;
 import cz.mg.collections.list.List;
-import cz.mg.test.Assert;
+import cz.mg.test.Assertions;
 
 import java.nio.file.Path;
 
@@ -50,6 +50,6 @@ public @Test class PageReadWriteTest {
         page.setLines(new List<>());
         reader.read(page);
 
-        Assert.assertThatCollections(lines, page.getLines()).areEqual();
+        Assertions.assertThatCollection(page.getLines()).isEqualTo(lines);
     }
 }
